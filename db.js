@@ -18,7 +18,7 @@ export async function connectDB() {
   try {
     await client.connect();
     console.log("🔥 Conectado ao MongoDB!");
-    return client.db("meuBanco"); // Substitua "meuBanco" pelo nome do seu banco de dados
+    return client.db("Cluster-whitenights");
   } catch (error) {
     console.error("Erro ao conectar ao MongoDB:", error);
     process.exit(1);
