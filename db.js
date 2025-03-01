@@ -1,11 +1,10 @@
 // db.js - Configuração da conexão com o MongoDB
+import { MongoClient, ServerApiVersion } from "mongodb";
+import dotenv from "dotenv";
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+dotenv.config();
 
-import { config } from "dotenv";
-config();
-
-const uri = process.env.MONGO_URI; // Usa a variável de ambiente no lugar da string fixa
+const uri = process.env.MONGO_URI;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -15,15 +14,15 @@ const client = new MongoClient(uri, {
   },
 });
 
-async function connectDB() {
+export async function connectDB() {
   try {
     await client.connect();
     console.log("🔥 Conectado ao MongoDB!");
     return client.db("meuBanco"); // Substitua "meuBanco" pelo nome do seu banco de dados
   } catch (error) {
     console.error("Erro ao conectar ao MongoDB:", error);
-    process.exit(1); // Encerra a aplicação em caso de erro crítico
+    process.exit(1);
   }
 }
 
-module.exports = { connectDB, client };
+export { client };
