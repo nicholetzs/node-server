@@ -18,7 +18,7 @@ server.listen(port, hostname, () => {
 import http from "http";
 import { connectDB } from "./db.js";
 
-const port = process.env.PORT || 3000; // Render define a porta automaticamente
+const port = process.env.PORT; // Render define a porta automaticamente
 
 async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
