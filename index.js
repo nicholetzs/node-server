@@ -34,7 +34,7 @@ async function startServer() {
   });
 
   server.listen(port, () => {
-    console.log(`🚀 Servidor rodando em http://:${port}/`);
+    console.log(`🚀 Servidor rodando em http://localhost:${port}/`);
   });
 }
 
