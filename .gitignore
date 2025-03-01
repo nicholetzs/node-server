@@ -1,0 +1,23 @@
+# Ignorar node_modules (bibliotecas instaladas)
+node_modules/
+
+# Ignorar arquivos de logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar variáveis de ambiente
+.env
+
+# Ignorar cache do npm e Yarn
+.npm/
+.yarn/
+
+# Ignorar arquivos de build
+dist/
+build/
+
+# Ignorar arquivos do editor
+.vscode/
+.idea/
+.DS_Store
