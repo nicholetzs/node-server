@@ -15,7 +15,7 @@ server.listen(port, hostname, () => {
 });*/
 
 //Código novo para criar um servidor para o Render acessar a aplicação (abrindo portas)
-const http = require("http");
+import http from "http";
 const { connectDB } = require("./db");
 
 const hostname = "0.0.0.0"; // Permite acesso externo no Render
