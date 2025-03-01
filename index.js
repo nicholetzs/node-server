@@ -18,7 +18,6 @@ server.listen(port, hostname, () => {
 import http from "http";
 import { connectDB } from "./db.js";
 
-const hostname = "0.0.0.0"; // Permite acesso externo no Render
 const port = process.env.PORT || 3000; // Render define a porta automaticamente
 
 async function startServer() {
@@ -34,8 +33,8 @@ async function startServer() {
     }
   });
 
-  server.listen(port, hostname, () => {
-    console.log(`🚀 Servidor rodando em http://${hostname}:${port}/`);
+  server.listen(port, () => {
+    console.log(`🚀 Servidor rodando em http://:${port}/`);
   });
 }
 
