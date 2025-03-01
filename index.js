@@ -14,9 +14,9 @@ server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });*/
 
-//Código novo para criar um servidor para o Render acessar a aplicação (abrindo portas)
+//Código novo para criar um servidor para o Render acessar a aplicação (abrindo portas pra fora) sem segurança reforçada
 import http from "http";
-const { connectDB } = require("./db");
+import { connectDB } from "./db.js";
 
 const hostname = "0.0.0.0"; // Permite acesso externo no Render
 const port = process.env.PORT || 3000; // Render define a porta automaticamente
