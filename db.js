@@ -1,10 +1,11 @@
 // db.js - Configuração da conexão com o MongoDB
 
 const { MongoClient, ServerApiVersion } = require("mongodb");
-require("dotenv").config(); // Carrega as variáveis de ambiente do .env (se necessário)
+
+import { config } from "dotenv";
+config();
 
 const uri = process.env.MONGO_URI; // Usa a variável de ambiente no lugar da string fixa
-console.log("🔍 MongoDB URI carregada:", process.env.MONGO_URI);
 
 const client = new MongoClient(uri, {
   serverApi: {
