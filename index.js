@@ -24,7 +24,7 @@ async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
 
   const server = http.createServer(async (req, res) => {
-    if (req.url === "/" && req.method === "POST") {
+    if (req.url === "/" && req.method === "GET") {
       res.writeHead(200, { "Content-Type": "text/plain" });
       res.end("Servidor está rodando e conectado ao MongoDB!");
     } else {
