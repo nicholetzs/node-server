@@ -1,21 +1,3 @@
-import { createServer } from "node:http";
-
-//Código antigo para criar um servidor
-/*const hostname = "127.0.0.1";
-const port = 3000;
-
-const server = createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.end("Hello World");
-});
-
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});*/
-
-//Código novo para criar um servidor para o Render acessar a aplicação (abrindo portas pra fora) sem segurança reforçada
-import http from "http";
 import { connectDB } from "./db.js";
 import express from "express";
 
@@ -31,6 +13,17 @@ async function startServer() {
     return;
   }
   const app = express();
+
+  // Rota para mostrar a resposta da API
+  app.get("/weather", async (req, res) => {
+    try {
+      const weatherData = await getWeatherData(); // Chama a função para obter os dados
+      res.json(weatherData); // Retorna os dados da API para o cliente
+      console.log(weatherData, "Dados da API"); // Log dos dados recebidos
+    } catch (error) {
+      res.status(500).send("Erro ao obter dados meteorológicos");
+    }
+  });
 
   app.get("/", async (req, res) => {
     res.status(200).send("Servidor está rodando e conectado ao MongoDB!");
