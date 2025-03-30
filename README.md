@@ -1,7 +1,7 @@
 # 🌤️ Projeto: White Nights
 
 ## 📌 Descrição
-White Nights é um sistema que coleta e armazena previsões meteorológicas de 3 em 3 horas em Vitória, ES. Utilizando a API **OpenWeatherMap**, a aplicação salva dados de previsão do tempo em um banco **MongoDB**, permitindo análises futuras.
+White Nights é um projeto pequeno que coleta e armazena previsões meteorológicas de 3 em 3 horas em Vitória, ES. Utilizando a API **OpenWeatherMap**, a aplicação salva dados de previsão do tempo em um banco **MongoDB**, permitindo análises futuras.
 
 ## 🚀 Tecnologias Utilizadas
 - **Node.js** (Back-end)
