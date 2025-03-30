@@ -9,10 +9,12 @@ export async function getWeatherData() {
   const lat = -20.3155; // Latitude de Vitória
   const lon = -40.3128; // Longitude de Vitória
   console.log("Chave da API:", process.env.WEATHER_API_KEY);
+  console.log("Latitude:", lat);
+  console.log("Longitude:", lon);
 
   try {
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${weatherApiKey}&units=metric`
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric&lang=pt_br`
     );
     console.log(response, "Resposta da API"); // Log da resposta da API
 
