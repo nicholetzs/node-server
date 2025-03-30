@@ -32,15 +32,11 @@ async function startServer() {
   }
   const app = express();
 
-  const server = app.get(async (req, res) => {
-    if (req.url === "/") {
-      res.status(200).send("Servidor está rodando e conectado ao MongoDB!");
-    } else {
-      res.status(404).send("Página não encontrada.");
-    }
+  app.get("/", async (req, res) => {
+    res.status(200).send("Servidor está rodando e conectado ao MongoDB!");
   });
 
-  server.listen(port, () => {
+  app.listen(port, () => {
     console.log(`🚀 Servidor rodando em http://localhost:${port}/`);
   });
 }
