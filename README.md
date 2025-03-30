@@ -78,8 +78,9 @@ Retorna a previsão meteorológica de 3 em 3 horas para o dia atual.
 ---
 
 ## 🛠️ Possíveis Melhorias
-✅ Criar um dashboard para visualizar previsões e histórico
 ✅ Fazer front end
+✅ Criar verificação de acessos para API (?)
+
 
 
 ---
