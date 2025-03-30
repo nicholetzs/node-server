@@ -6,7 +6,7 @@ export async function saveWeatherData() {
     const data = await getWeatherData(); // Obtém os dados da API
 
     const db = await connectDB();
-    const collection = db.collection("weather"); // Define a coleção
+    const collection = db.collection("collection-weather"); // Define a coleção
 
     const weatherData = data.list.map((forecast) => ({
       timestamp: new Date(forecast.dt * 1000),
