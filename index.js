@@ -17,13 +17,12 @@ server.listen(port, hostname, () => {
 //Código novo para criar um servidor para o Render acessar a aplicação (abrindo portas pra fora) sem segurança reforçada
 import http from "http";
 import { connectDB } from "./db.js";
+import express from "express";
 
 const port = process.env.PORT; // Render define a porta automaticamente
 
 async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
-  const express = require("express");
-  const app = express();
 
   if (!db) {
     console.error(
@@ -31,14 +30,13 @@ async function startServer() {
     );
     return;
   }
+  const app = express();
 
   const server = app.get(async (req, res) => {
     if (req.url === "/") {
-      res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end("Servidor está rodando e conectado ao MongoDB!");
+      res.status(200).send("Servidor está rodando e conectado ao MongoDB!");
     } else {
-      res.writeHead(404, { "Content-Type": "text/plain" });
-      res.end("Página não encontrada.");
+      res.status(404).send("Página não encontrada.");
     }
   });
 
