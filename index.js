@@ -1,6 +1,8 @@
 import { connectDB } from "./db.js";
 import express from "express";
-import { getWeatherData } from "./weather.js"; // Importe a função do arquivo 'weather.js'
+import { getWeatherData } from "./weather.js";
+import dotenv from "dotenv";
+dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 const port = process.env.PORT; // Render define a porta automaticamente
 
