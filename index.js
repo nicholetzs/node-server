@@ -1,5 +1,6 @@
 import { connectDB } from "./db.js";
 import express from "express";
+import { getWeatherData } from "./weather.js"; // Importe a função do arquivo 'weather.js'
 
 const port = process.env.PORT; // Render define a porta automaticamente
 
