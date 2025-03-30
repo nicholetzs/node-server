@@ -18,8 +18,10 @@ export async function saveWeatherData() {
       location: "Vitória",
     }));
 
-    await collection.insertMany(weatherData);
+    const result = await collection.insertMany(weatherData);
     console.log("✅ Dados meteorológicos salvos no MongoDB!");
+
+    return result; // Retorna os dados inseridos
   } catch (error) {
     console.error("Erro ao salvar os dados no banco de dados:", error);
   }
