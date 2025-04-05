@@ -77,19 +77,12 @@ export default function WeatherDashboard() {
       return {
         date: isoDate, // ainda útil para ordenação
         day: isoDate.toLocaleDateString("pt-BR", { weekday: "short" }),
-        tempMin,
-        tempMax,
+        tempMin: primeira.temperature_min,
+        tempMax: primeira.temperature_max,
         condition: primeira.weather,
         icon: primeira.weather_icon,
         location: primeira.location,
-        timestamp: new Date(primeira.timestamp).toLocaleString("pt-BR", {
-          timeZone: "America/Sao_Paulo",
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+        Timestamp: primeira.timestamp,
         temperature: primeira.temperature,
         humidity: primeira.humidity,
         wind_speed: primeira.wind_speed,
@@ -115,10 +108,22 @@ export default function WeatherDashboard() {
       "nuvens dispersas": "partly-sunny",
       nublado: "cloudy",
 
-      // Chuvas
-      "chuva leve": "rain",
-      "chuva moderada": "rain",
-      "chuva forte": "rain",
+      // Condições de chuva com diferentes intensidades
+      "chuva leve": "light-rain",
+      garoa: "light-rain",
+      chuvisco: "light-rain",
+      "light rain": "light-rain",
+      drizzle: "light-rain",
+
+      "chuva moderada": "moderate-rain",
+      chuva: "moderate-rain",
+      rain: "moderate-rain",
+      "moderate rain": "moderate-rain",
+
+      "chuva forte": "heavy-rain",
+      temporal: "heavy-rain",
+      "heavy rain": "heavy-rain",
+      downpour: "heavy-rain",
     };
 
     for (const key in conditionMap) {
@@ -129,15 +134,6 @@ export default function WeatherDashboard() {
 
     return "partly-sunny";
   };
-
-  const dataFormatada = new Date().toLocaleString("pt-BR", {
-    timeZone: "America/Sao_Paulo",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-pink-300 to-blue-200 p-4 md:p-8 flex items-center justify-center">
@@ -305,22 +301,16 @@ export default function WeatherDashboard() {
             {previsoes.map((dia, index) => (
               <WeatherCard
                 key={index}
-                date={new Date(dia.timestamp).toLocaleDateString("pt-BR", {
-                  weekday: "short",
-                  day: "2-digit",
-                  month: "2-digit",
-                })}
-                //temperature={dia.temperature}
+                date={dia.timestamp}
                 tempMin={dia.temperature_min}
                 tempMax={dia.temperature_max}
                 condition={dia.weather}
                 location={dia.location}
-                weather_icon={getIconFromCondition(dia.weather)}
+                icon={getIconFromCondition(dia.weather)} // ✅ passa o valor certo na prop correta
                 humidity={dia.humidity}
                 wind_speed={dia.wind_speed}
                 rain={dia.rain}
                 day={""}
-                icon={""}
               />
             ))}
           </div>
