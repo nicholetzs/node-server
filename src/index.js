@@ -4,6 +4,7 @@ import { getWeatherData } from "./weather.js";
 import dotenv from "dotenv";
 import { saveWeatherData } from "./weatherService.js";
 import cors from "cors";
+import { weatherLimiter } from "./weatherLimit.js"; // Importa o limitador de requisições
 
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
@@ -66,14 +67,13 @@ async function startServer() {
     }
   });
 
-  // Rota que apenas retorna os dados salvos no MongoDB e não da API!!!
-  app.get("/weatherList", async (req, res) => {
+  app.get("/weatherList", weatherLimiter, async (req, res) => {
     try {
       const db = await connectDB();
       const collection = db.collection("collection-weather");
 
       const hoje = new Date();
-      hoje.setHours(0, 0, 0, 0); // Zera a hora para pegar desde meia-noite porque a API é de 3 em 3 horas
+      hoje.setHours(0, 0, 0, 0); // Zera a hora
 
       const dados = await collection
         .find({ timestamp: { $gte: hoje } })
