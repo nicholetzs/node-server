@@ -72,11 +72,12 @@ async function startServer() {
       const db = await connectDB();
       const collection = db.collection("collection-weather");
 
-      const agora = new Date(); // Data/hora atual
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0); // Zera a hora para pegar desde meia-noite porque a API é de 3 em 3 horas
 
       const dados = await collection
-        .find({ timestamp: { $gte: agora } }) // Somente dados "a partir de agora"
-        .sort({ timestamp: 1 }) // Ordena do mais próximo ao mais distante
+        .find({ timestamp: { $gte: hoje } })
+        .sort({ timestamp: 1 })
         .toArray();
 
       res.status(200).json(dados);
