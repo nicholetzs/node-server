@@ -9,7 +9,7 @@ export async function saveWeatherData() {
     const collection = db.collection("collection-weather"); // Define a coleção
 
     const weatherData = data.list.map((forecast) => ({
-      timestamp: new Date(forecast.dt * 1000),
+      timestamp: new Date(forecast.dt * 1000).toLocaleDateString("pt-BR"),
       temperature: forecast.main.temp,
       humidity: forecast.main.humidity,
       weather: forecast.weather[0].description,
