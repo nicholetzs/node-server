@@ -9,6 +9,7 @@ const port = process.env.PORT; // Render define a porta automaticamente
 
 async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
+  const app = express(); // <-- precisa estar AQUI antes de usar `app`
 
   app.use(
     cors({
@@ -24,7 +25,6 @@ async function startServer() {
     );
     return;
   }
-  const app = express();
 
   // Rota para mostrar a resposta da API (teste)
   app.get("/weather", async (req, res) => {
