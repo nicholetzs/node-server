@@ -11,7 +11,15 @@ export default function WeatherDashboard() {
 
   const buscarPrevisoes = async () => {
     try {
-      const resposta = await fetch("http://localhost:3001/weatherSave");
+      // Primeiro, força a atualização chamando o POST
+      await fetch("https://whitenights.onrender.com/weatherSave", {
+        method: "POST",
+      });
+
+      // Depois, faz o GET como já fazia antes
+      const resposta = await fetch(
+        "https://whitenights.onrender.com/weatherList"
+      );
       const dados = await resposta.json();
       setPrevisoes(dados);
     } catch (erro) {
@@ -20,7 +28,7 @@ export default function WeatherDashboard() {
   };
 
   useEffect(() => {
-    fetch("https://whitenights.onrender.com/weatherSave") // ajuste se sua URL for diferente
+    fetch("https://whitenights.onrender.com/weatherList") // ajuste se sua URL for diferente
       .then((res) => res.json())
       .then((data) => setPrevisoes(data))
       .catch((err) => console.error("Erro ao buscar previsões:", err));
@@ -155,7 +163,7 @@ export default function WeatherDashboard() {
           {/* Daily Section Title */}
           <div className="flex flex-row justify-between items-center mb-4">
             <h3 className="text-xl font-medium text-gray-800">Daily</h3>
-            <AtualizarPrevisoes onAtualizar={() => alert("Atualizando...")} />
+            <AtualizarPrevisoes onAtualizar={buscarPrevisoes} />
           </div>
 
           {/* Daily Weather Cards */}

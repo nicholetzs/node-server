@@ -18,7 +18,7 @@ async function startServer() {
   }
   const app = express();
 
-  // Rota para mostrar a resposta da API
+  // Rota para mostrar a resposta da API (teste)
   app.get("/weather", async (req, res) => {
     try {
       const weatherData = await getWeatherData(); // Chama a função para obter os dados
@@ -29,6 +29,7 @@ async function startServer() {
     }
   });
 
+  // Rota para salvar os dados no MongoDB pegando da API
   app.post("/weatherSave", async (req, res) => {
     try {
       const insertedResult = await saveWeatherData(); // Salva os dados no MongoDB
@@ -47,6 +48,26 @@ async function startServer() {
     } catch (error) {
       console.error("Erro ao salvar dados meteorológicos:", error);
       res.status(500).json({ error: "Erro ao salvar dados meteorológicos." });
+    }
+  });
+
+  // Rota que apenas retorna os dados salvos no MongoDB e não da API!!!
+  app.get("/weatherList", async (req, res) => {
+    try {
+      const db = await connectDB();
+      const collection = db.collection("collection-weather");
+
+      // Busca os dados mais recentes (pode limitar, ordenar, etc.)
+      const dados = await collection
+        .find({})
+        .sort({ timestamp: -1 }) // Opcional: ordena pelo mais recente
+        .limit(40) // Pode ajustar a quantidade
+        .toArray();
+
+      res.status(200).json(dados);
+    } catch (error) {
+      console.error("Erro ao buscar dados do banco:", error);
+      res.status(500).json({ error: "Erro ao buscar dados salvos." });
     }
   });
 
