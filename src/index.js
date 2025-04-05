@@ -4,7 +4,6 @@ import { getWeatherData } from "./weather.js";
 import dotenv from "dotenv";
 import { saveWeatherData } from "./weatherService.js";
 import cors from "cors";
-import { allowedOrigins } from "./config.js"; // Importa as origens permitidas
 
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
@@ -13,6 +12,11 @@ const port = process.env.PORT; // Render define a porta automaticamente
 async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
   const app = express(); // <-- precisa estar AQUI antes de usar `app`
+
+  const allowedOrigins = [
+    "http://localhost:3000", // para desenvolvimento local
+    "https://whitenights.onrender.com", // substitua pela URL real do seu frontend no Render
+  ];
 
   app.use(
     cors({
