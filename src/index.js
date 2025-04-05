@@ -3,6 +3,9 @@ import express from "express";
 import { getWeatherData } from "./weather.js";
 import dotenv from "dotenv";
 import { saveWeatherData } from "./weatherService.js";
+import cors from "cors";
+import { allowedOrigins } from "./config.js"; // Importa as origens permitidas
+
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 const port = process.env.PORT; // Render define a porta automaticamente
