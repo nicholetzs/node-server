@@ -1,14 +1,18 @@
 {
+  "name": "meu-projeto-api",
+  "version": "1.0.0",
+  "description": "Backend com Express para consumo de API e MongoDB",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongodb": "^6.14.0"
   },
-  "scripts": {
-    "start": "node index.js"
-  },
-  "type": "module",
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
