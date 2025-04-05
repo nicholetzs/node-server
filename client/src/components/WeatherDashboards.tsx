@@ -297,7 +297,7 @@ export default function WeatherDashboard() {
           </div>
 
           {/* Daily Weather Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 relative z-10">
             {previsoes.map((dia, index) => (
               <WeatherCard
                 key={index}
