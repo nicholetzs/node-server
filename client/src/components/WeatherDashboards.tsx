@@ -9,8 +9,18 @@ export default function WeatherDashboard() {
 
   const [previsoes, setPrevisoes] = useState([]);
 
+  const buscarPrevisoes = async () => {
+    try {
+      const resposta = await fetch("http://localhost:3001/weatherSave");
+      const dados = await resposta.json();
+      setPrevisoes(dados);
+    } catch (erro) {
+      console.error("Erro ao buscar previsões:", erro);
+    }
+  };
+
   useEffect(() => {
-    fetch("http://localhost:3000/api/previsoes") // ajuste se sua URL for diferente
+    fetch("https://whitenights.onrender.com/weatherSave") // ajuste se sua URL for diferente
       .then((res) => res.json())
       .then((data) => setPrevisoes(data))
       .catch((err) => console.error("Erro ao buscar previsões:", err));
