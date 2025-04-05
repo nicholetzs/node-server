@@ -10,9 +10,11 @@ export async function saveWeatherData() {
 
     const weatherData = data.list.map((forecast) => ({
       timestamp: new Date(forecast.dt * 1000).toLocaleDateString("pt-BR"),
+      timestamp_hour: new Date(forecast.dt * 1000).toLocaleTimeString("pt-BR"),
       temperature: forecast.main.temp,
       humidity: forecast.main.humidity,
       weather: forecast.weather[0].description,
+      weather_icon: forecast.weather[0].icon,
       wind_speed: forecast.wind.speed,
       rain: forecast.rain ? true : false,
       location: "Vitória",
