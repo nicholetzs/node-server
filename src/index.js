@@ -10,6 +10,14 @@ const port = process.env.PORT; // Render define a porta automaticamente
 async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
 
+  app.use(
+    cors({
+      origin: allowedOrigins,
+      methods: ["GET", "POST"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );
+
   if (!db) {
     console.error(
       "Erro ao conectar ao MongoDB. O servidor não pode ser iniciado."

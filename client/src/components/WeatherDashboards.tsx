@@ -27,13 +27,6 @@ export default function WeatherDashboard() {
     }
   };
 
-  useEffect(() => {
-    fetch("https://whitenights.onrender.com/weatherList") // ajuste se sua URL for diferente
-      .then((res) => res.json())
-      .then((data) => setPrevisoes(data))
-      .catch((err) => console.error("Erro ao buscar previsões:", err));
-  }, []);
-
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-pink-300 to-blue-200 p-4 md:p-8 flex items-center justify-center">
       <div className="w-full max-w-6xl bg-white/20 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row">
