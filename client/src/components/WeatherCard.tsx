@@ -5,6 +5,11 @@ interface WeatherCardProps {
   tempMax: number;
   condition: string;
   icon: string;
+  location?: string; // Adicionando a propriedade location
+  weather_icon?: string; // Adicionando a propriedade weather_icon
+  humidity?: number; // Adicionando a propriedade humidity
+  wind_speed?: number; // Adicionando a propriedade wind
+  rain?: boolean; // Adicionando a propriedade rain
 }
 
 export default function WeatherCard({

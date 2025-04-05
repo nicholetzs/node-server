@@ -50,17 +50,20 @@ export default function WeatherDashboard() {
 
   const previsoesAgrupadas: { [key: string]: Previsao[] } = previsoes.reduce(
     (acc: any, curr: Previsao) => {
-      const [datePart] = curr.timestamp.split(" ");
-      if (!acc[datePart]) {
-        acc[datePart] = [];
+      const data = new Date(curr.timestamp).toLocaleDateString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+      });
+
+      if (!acc[data]) {
+        acc[data] = [];
       }
-      acc[datePart].push(curr);
+      acc[data].push(curr);
       return acc;
     },
     {}
   );
 
-  const diasAgrupados = Object.entries(previsoesAgrupadas)
+  const x = Object.entries(previsoesAgrupadas)
     .map(([data, previsoesDoDia]) => {
       const [day, month, year] = data.split("/");
       const isoDate = new Date(`${year}-${month}-${day}`);
@@ -72,14 +75,21 @@ export default function WeatherDashboard() {
       const primeira = previsoesDoDia[0];
 
       return {
-        date: isoDate,
+        date: isoDate, // ainda útil para ordenação
         day: isoDate.toLocaleDateString("pt-BR", { weekday: "short" }),
         tempMin,
         tempMax,
         condition: primeira.weather,
         icon: primeira.weather_icon,
         location: primeira.location,
-        timestamp: primeira.timestamp,
+        timestamp: new Date(primeira.timestamp).toLocaleString("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
         temperature: primeira.temperature,
         humidity: primeira.humidity,
         wind_speed: primeira.wind_speed,
@@ -119,6 +129,15 @@ export default function WeatherDashboard() {
 
     return "partly-sunny";
   };
+
+  const dataFormatada = new Date().toLocaleString("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-pink-300 to-blue-200 p-4 md:p-8 flex items-center justify-center">
@@ -218,20 +237,14 @@ export default function WeatherDashboard() {
           </div>
 
           {/* Current Weather */}
-          {diasAgrupados.length > 0 && (
+          {previsoes.length > 0 && (
             <div className="text-center mb-8">
               {/* Local e horário */}
               <h2 className="text-xl text-gray-800 mb-1">
-                {diasAgrupados[0].location}
+                {previsoes[0].location}
               </h2>
               <p className="text-sm text-gray-500 mb-2">
-                {new Date(diasAgrupados[0].timestamp).toLocaleString("pt-BR", {
-                  weekday: "long",
-                  day: "2-digit",
-                  month: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {previsoes[0].timestamp}
               </p>
 
               {/* Temperatura central com solzinho e nuvem */}
@@ -244,28 +257,26 @@ export default function WeatherDashboard() {
                     </div>
                   </div>
                   <span className="text-7xl font-light text-blue-600">
-                    {Math.round(diasAgrupados[0].temperature)}°C
+                    {Math.round(previsoes[0].temperature)}°C
                   </span>
                   <span className="text-xl align-top text-blue-600">°C</span>
                 </div>
               </div>
 
               {/* Descrição do clima */}
-              <p className="text-gray-600 capitalize">
-                {diasAgrupados[0].weather}
-              </p>
+              <p className="text-gray-600 capitalize">{previsoes[0].weather}</p>
 
               {/* Informações adicionais */}
               <div className="flex justify-center gap-8 mt-4 text-sm text-gray-600">
                 <div className="text-center">
-                  <p>Min: {Math.round(diasAgrupados[0].tempMin)}°C</p>
-                  <p>Max: {Math.round(diasAgrupados[0].tempMax)}°C</p>
+                  <p>Min: {Math.round(previsoes[0].temperature_min)}°C</p>
+                  <p>Max: {Math.round(previsoes[0].temperature_max)}°C</p>
                   <p>Sensação: {Math.round(previsoes[0].temperature)}°C</p>
                 </div>
                 <div className="text-center">
                   <p>Vento: {Math.round(previsoes[0].wind_speed)} km/h</p>
-                  <p>Umidade: {diasAgrupados[0].humidity}%</p>
-                  <p>Chuva: {diasAgrupados[0].rain ? "Sim" : "Não"}</p>
+                  <p>Umidade: {previsoes[0].humidity}%</p>
+                  <p>Chuva: {previsoes[0].rain ? "Sim" : "Não"}</p>
                 </div>
               </div>
             </div>
@@ -278,22 +289,38 @@ export default function WeatherDashboard() {
               onAtualizar={buscarPrevisoes}
               loading={loading}
             />
+
+            <div>
+              <button
+                className="text-sm text-gray-500 hover:text-blue-500 transition-colors"
+                onClick={atualizarPrevisoes}
+              >
+                teste chamar api e salvar no banco de dados
+              </button>
+            </div>
           </div>
 
           {/* Daily Weather Cards */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 relative z-10">
-            {diasAgrupados.map((dia, index) => (
+            {previsoes.map((dia, index) => (
               <WeatherCard
                 key={index}
-                day={dia.day}
-                date={dia.date.toLocaleDateString("pt-BR", {
+                date={new Date(dia.timestamp).toLocaleDateString("pt-BR", {
+                  weekday: "short",
                   day: "2-digit",
                   month: "2-digit",
                 })}
-                tempMin={dia.tempMin}
-                tempMax={dia.tempMax}
-                condition={dia.condition}
-                icon={getIconFromCondition(dia.condition)}
+                //temperature={dia.temperature}
+                tempMin={dia.temperature_min}
+                tempMax={dia.temperature_max}
+                condition={dia.weather}
+                location={dia.location}
+                weather_icon={getIconFromCondition(dia.weather)}
+                humidity={dia.humidity}
+                wind_speed={dia.wind_speed}
+                rain={dia.rain}
+                day={""}
+                icon={""}
               />
             ))}
           </div>
