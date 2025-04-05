@@ -277,3 +277,22 @@ Você pode usar Render, Railway ou outra plataforma de backend para publicar sua
 ---
 
 Feito com ☕ e curiosidade por **Nichole** 🪐
+
+🧊 E agora sobre temp mínima e máxima:
+A OpenWeather API retorna dados de previsão a cada 3 horas, ou seja:
+
+00h → 23.5°C
+
+03h → 21.7°C
+
+06h → 20.1°C
+
+...
+
+21h → 24.8°C
+
+Se você agrupar todos os dados do mesmo dia, consegue descobrir:
+
+🔺Temp máxima do dia: 24.8°C
+
+🔻Temp mínima do dia: 20.1°C

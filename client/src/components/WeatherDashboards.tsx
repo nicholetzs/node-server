@@ -4,19 +4,38 @@ import WeatherCard from "./WeatherCard";
 import TemperatureChart from "./TemperatureChart";
 import AtualizarPrevisoes from "./AtualizarPrevisoes";
 
+interface Previsao {
+  timestamp: string;
+  temperature: number;
+  temperature_min: number;
+  temperature_max: number;
+  humidity: number;
+  weather: string;
+  wind_speed: number;
+  rain: boolean;
+  location: string;
+  weather_icon?: string;
+}
+
 export default function WeatherDashboard() {
   const [activeTab, setActiveTab] = useState("daily");
+  const [previsoes, setPrevisoes] = useState<Previsao[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const [previsoes, setPrevisoes] = useState([]);
-
-  const buscarPrevisoes = async () => {
+  const atualizarPrevisoes = async () => {
     try {
-      // Primeiro, força a atualização chamando o POST
       await fetch("https://whitenights.onrender.com/weatherSave", {
         method: "POST",
       });
+      console.log("Dados atualizados com sucesso");
+    } catch (erro) {
+      console.error("Erro ao atualizar previsões:", erro);
+    }
+  };
 
-      // Depois, faz o GET como já fazia antes
+  const buscarPrevisoes = async () => {
+    setLoading(true);
+    try {
       const resposta = await fetch(
         "https://whitenights.onrender.com/weatherList"
       );
@@ -24,7 +43,81 @@ export default function WeatherDashboard() {
       setPrevisoes(dados);
     } catch (erro) {
       console.error("Erro ao buscar previsões:", erro);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const previsoesAgrupadas: { [key: string]: Previsao[] } = previsoes.reduce(
+    (acc: any, curr: Previsao) => {
+      const [datePart] = curr.timestamp.split(" ");
+      if (!acc[datePart]) {
+        acc[datePart] = [];
+      }
+      acc[datePart].push(curr);
+      return acc;
+    },
+    {}
+  );
+
+  const diasAgrupados = Object.entries(previsoesAgrupadas)
+    .map(([data, previsoesDoDia]) => {
+      const [day, month, year] = data.split("/");
+      const isoDate = new Date(`${year}-${month}-${day}`);
+
+      const temperaturas = previsoesDoDia.map((p) => Number(p.temperature));
+      const tempMin = Math.min(...temperaturas);
+      const tempMax = Math.max(...temperaturas);
+
+      const primeira = previsoesDoDia[0];
+
+      return {
+        date: isoDate,
+        day: isoDate.toLocaleDateString("pt-BR", { weekday: "short" }),
+        tempMin,
+        tempMax,
+        condition: primeira.weather,
+        icon: primeira.weather_icon,
+        location: primeira.location,
+        timestamp: primeira.timestamp,
+        temperature: primeira.temperature,
+        humidity: primeira.humidity,
+        wind_speed: primeira.wind_speed,
+        rain: primeira.rain,
+        weather: primeira.weather,
+        weather_icon: primeira.weather_icon,
+      };
+    })
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  const getIconFromCondition = (condition: string): string => {
+    const normalizedCondition = condition
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    const conditionMap: Record<string, string> = {
+      // Céu limpo
+      "ceu limpo": "sunny",
+
+      // Nuvens
+      "algumas nuvens": "partly-sunny",
+      "nuvens dispersas": "partly-sunny",
+      nublado: "cloudy",
+
+      // Chuvas
+      "chuva leve": "rain",
+      "chuva moderada": "rain",
+      "chuva forte": "rain",
+    };
+
+    for (const key in conditionMap) {
+      if (normalizedCondition.includes(key)) {
+        return conditionMap[key];
+      }
+    }
+
+    return "partly-sunny";
   };
 
   return (
@@ -125,60 +218,87 @@ export default function WeatherDashboard() {
           </div>
 
           {/* Current Weather */}
-          <div className="text-center mb-8">
-            <h2 className="text-xl text-gray-800 mb-2">Tirana, Albania</h2>
-            <div className="flex justify-center items-center mb-2">
-              <div className="relative">
-                <div className="absolute -left-12 top-1/2 -translate-y-1/2">
-                  <div className="w-16 h-16 flex items-center justify-center">
-                    <div className="w-10 h-10 bg-yellow-400 rounded-full absolute top-1 left-1"></div>
-                    <div className="w-12 h-6 bg-white rounded-full absolute bottom-1 right-0"></div>
-                  </div>
-                </div>
-                <span className="text-7xl font-light text-blue-600">20</span>
-                <span className="text-xl align-top text-blue-600">°C</span>
-              </div>
-            </div>
-            <p className="text-gray-600">Partly Sunny</p>
+          {diasAgrupados.length > 0 && (
+            <div className="text-center mb-8">
+              {/* Local e horário */}
+              <h2 className="text-xl text-gray-800 mb-1">
+                {diasAgrupados[0].location}
+              </h2>
+              <p className="text-sm text-gray-500 mb-2">
+                {new Date(diasAgrupados[0].timestamp).toLocaleString("pt-BR", {
+                  weekday: "long",
+                  day: "2-digit",
+                  month: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
 
-            <div className="flex justify-center gap-8 mt-4">
-              <div className="text-center">
-                <p className="text-sm text-gray-600">Feels Like 20</p>
-                <p className="text-sm text-gray-600">Visibility 15 km</p>
+              {/* Temperatura central com solzinho e nuvem */}
+              <div className="flex justify-center items-center mb-2">
+                <div className="relative">
+                  <div className="absolute -left-12 top-1/2 -translate-y-1/2">
+                    <div className="w-16 h-16 flex items-center justify-center">
+                      <div className="w-10 h-10 bg-yellow-400 rounded-full absolute top-1 left-1 shadow-md"></div>
+                      <div className="w-12 h-6 bg-white rounded-full absolute bottom-1 right-0 shadow"></div>
+                    </div>
+                  </div>
+                  <span className="text-7xl font-light text-blue-600">
+                    {Math.round(diasAgrupados[0].temperature)}°C
+                  </span>
+                  <span className="text-xl align-top text-blue-600">°C</span>
+                </div>
               </div>
-              <div className="text-center">
-                <p className="text-sm text-gray-600">Wind 11 km/h</p>
-                <p className="text-sm text-gray-600">Humidity 67%</p>
+
+              {/* Descrição do clima */}
+              <p className="text-gray-600 capitalize">
+                {diasAgrupados[0].weather}
+              </p>
+
+              {/* Informações adicionais */}
+              <div className="flex justify-center gap-8 mt-4 text-sm text-gray-600">
+                <div className="text-center">
+                  <p>Min: {Math.round(diasAgrupados[0].tempMin)}°C</p>
+                  <p>Max: {Math.round(diasAgrupados[0].tempMax)}°C</p>
+                  <p>Sensação: {Math.round(previsoes[0].temperature)}°C</p>
+                </div>
+                <div className="text-center">
+                  <p>Vento: {Math.round(previsoes[0].wind_speed)} km/h</p>
+                  <p>Umidade: {diasAgrupados[0].humidity}%</p>
+                  <p>Chuva: {diasAgrupados[0].rain ? "Sim" : "Não"}</p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Daily Section Title */}
           <div className="flex flex-row justify-between items-center mb-4">
             <h3 className="text-xl font-medium text-gray-800">Daily</h3>
-            <AtualizarPrevisoes onAtualizar={buscarPrevisoes} />
+            <AtualizarPrevisoes
+              onAtualizar={buscarPrevisoes}
+              loading={loading}
+            />
           </div>
 
           {/* Daily Weather Cards */}
-          {/* Weather Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-            {previsoes.map((previsao: any, index: number) => (
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 relative z-10">
+            {diasAgrupados.map((dia, index) => (
               <WeatherCard
                 key={index}
-                day={new Date(previsao.data).toLocaleDateString("en-US", {
-                  weekday: "short",
+                day={dia.day}
+                date={dia.date.toLocaleDateString("pt-BR", {
+                  day: "2-digit",
+                  month: "2-digit",
                 })}
-                date={new Date(previsao.data).getDate().toString()}
-                temp={previsao.temperatura}
-                condition={previsao.condicao}
-                icon="partly-sunny" // opcional: você pode ajustar isso baseado na `condicao`
+                tempMin={dia.tempMin}
+                tempMax={dia.tempMax}
+                condition={dia.condition}
+                icon={getIconFromCondition(dia.condition)}
               />
             ))}
           </div>
-
           {/* Hourly Section */}
           <h3 className="text-xl font-medium text-gray-800 mb-4">Hourly</h3>
-
           {/* Temperature Chart */}
           <div className="h-48">
             <TemperatureChart />

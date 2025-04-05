@@ -72,11 +72,11 @@ async function startServer() {
       const db = await connectDB();
       const collection = db.collection("collection-weather");
 
-      // Busca os dados mais recentes (pode limitar, ordenar, etc.)
+      const agora = new Date(); // Data/hora atual
+
       const dados = await collection
-        .find({})
-        .sort({ timestamp: -1 }) // Opcional: ordena pelo mais recente
-        .limit(40) // Pode ajustar a quantidade
+        .find({ timestamp: { $gte: agora } }) // Somente dados "a partir de agora"
+        .sort({ timestamp: 1 }) // Ordena do mais próximo ao mais distante
         .toArray();
 
       res.status(200).json(dados);
