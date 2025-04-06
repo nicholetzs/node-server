@@ -10,13 +10,21 @@ dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 const port = process.env.PORT; // Render define a porta automaticamente
 
+// Serve os arquivos da build do React
+app.use(express.static(path.join(__dirname, "build")));
+
+// Qualquer rota que não for API, redireciona para o React
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
   const app = express(); // <-- precisa estar AQUI antes de usar `app`
 
   const allowedOrigins = [
     "http://localhost:3000", // para desenvolvimento local
-    "https://whitenights.onrender.com", // substitua pela URL real do seu frontend no Render
+    "https://whitenights.onrender.com", //Para desenvolvimento local e acessar as rotas
   ];
 
   app.use(
