@@ -5,11 +5,18 @@ import dotenv from "dotenv";
 import { saveWeatherData } from "./weatherService.js";
 import cors from "cors";
 import { weatherLimiter } from "./weatherLimit.js"; // Importa o limitador de requisições
+import path from "path"; // Importa o módulo path para manipulação de caminhos de arquivos
+
+import { fileURLToPath } from "url"; // Importa o módulo para manipulação de URLs de arquivos
+import { dirname } from "path"; // Importa o módulo para manipulação de caminhos de arquivos
 
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 const port = process.env.PORT; // Render define a porta automaticamente
 
+// isso aqui é necessário porque __dirname não existe com ESModules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // Serve os arquivos da build do React
 app.use(express.static(path.join(__dirname, "build")));
 
