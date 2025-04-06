@@ -12,11 +12,11 @@ const port = process.env.PORT; // Render define a porta automaticamente
 
 async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
-  const app = express(); // <-- precisa estar AQUI antes de usar `app`
+  const app = express();
 
   const allowedOrigins = [
-    "http://localhost:3000", // para desenvolvimento local
-    "https://whitenights.onrender.com", //Para desenvolvimento local e acessar as rotas
+    "http://localhost:3000", // Usei para desenvolvimento local com react
+    "https://whitenights.onrender.com", // Para desenvolvimento local e acessar as rotas
     "https://forecasttemperatur.netlify.app", // Para acessar as rotas do Netlify
   ];
 
@@ -48,6 +48,12 @@ async function startServer() {
 
   // Rota para salvar os dados no MongoDB pegando da API
   app.post("/weatherSave", async (req, res) => {
+    const token = req.headers["authorization"]; // Obtém o token do cabeçalho da requisição
+    const secretToken = process.env.SECRET_TOKEN;
+
+    if (token !== `ngc ${secretToken}`) {
+      return res.status(403).json({ error: "Acesso não autorizado." });
+    }
     try {
       const insertedResult = await saveWeatherData(); // Salva os dados no MongoDB
 
@@ -88,7 +94,7 @@ async function startServer() {
     }
   });
 
-  app.get("/servidor", async (req, res) => {
+  app.get("/", async (req, res) => {
     res.status(200).send("Servidor está rodando e conectado ao MongoDB!");
   });
 
