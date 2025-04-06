@@ -20,7 +20,7 @@ async function startServer() {
   const allowedOrigins = [
     "http://localhost:3000", // para desenvolvimento local
     "https://whitenights.onrender.com", //Para desenvolvimento local e acessar as rotas
-    "https://forecasttemperatur.netlify.app/", // Para acessar as rotas do Netlify
+    "https://forecasttemperatur.netlify.app", // Para acessar as rotas do Netlify
   ];
 
   app.use(
