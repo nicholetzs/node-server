@@ -50,8 +50,9 @@ async function startServer() {
   app.post("/weatherSave", async (req, res) => {
     const token = req.headers["authorization"]; // Obtém o token do cabeçalho da requisição
     const secretToken = process.env.SECRET_TOKEN;
+    const prefix = process.env.PREFIX_TOKEN; // Prefixo esperado no token
 
-    if (token !== `ngc ${secretToken}`) {
+    if (token !== `${prefix} ${secretToken}`) {
       return res.status(403).json({ error: "Acesso não autorizado." });
     }
     try {
