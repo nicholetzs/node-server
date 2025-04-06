@@ -275,7 +275,7 @@ https://whitenights.onrender.com/weatherSave
 O frontend está hospedado em:
 
 ```
-https://[seu-app].netlify.app
+https://forecasttemperatur.netlify.app/
 ```
 
 ---

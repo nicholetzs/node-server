@@ -5,9 +5,6 @@ import dotenv from "dotenv";
 import { saveWeatherData } from "./weatherService.js";
 import cors from "cors";
 import { weatherLimiter } from "./weatherLimit.js"; // Importa o limitador de requisições
-import path from "path"; // Importa o módulo path para manipulação de caminhos de arquivos
-
-import { fileURLToPath } from "url"; // Importa o módulo para manipulação de URLs de arquivos
 
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
