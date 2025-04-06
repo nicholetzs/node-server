@@ -17,20 +17,10 @@ async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
   const app = express(); // <-- precisa estar AQUI antes de usar `app`
 
-  // Configuração corrigida para arquivos estáticos
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-  // Serve os arquivos estáticos do React (caminho relativo correto)
-  app.use(express.static(path.join(__dirname, "../client/build")));
-
-  // Rota para servir o React
-  app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-  });
-
   const allowedOrigins = [
     "http://localhost:3000", // para desenvolvimento local
     "https://whitenights.onrender.com", //Para desenvolvimento local e acessar as rotas
+    "https://forecasttemperatur.netlify.app/", // Para acessar as rotas do Netlify
   ];
 
   app.use(
