@@ -24,7 +24,7 @@ async function startServer() {
   app.use(express.static(path.join(__dirname, "build")));
 
   // Qualquer rota que não for API, redireciona para o React
-  app.get("*", (req, res) => {
+  app.get("/react", (req, res) => {
     res.sendFile(path.join(__dirname, "build", "index.html"));
   });
 
