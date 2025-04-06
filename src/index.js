@@ -8,26 +8,25 @@ import { weatherLimiter } from "./weatherLimit.js"; // Importa o limitador de re
 import path from "path"; // Importa o módulo path para manipulação de caminhos de arquivos
 
 import { fileURLToPath } from "url"; // Importa o módulo para manipulação de URLs de arquivos
-import { dirname } from "path"; // Importa o módulo para manipulação de caminhos de arquivos
 
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 const port = process.env.PORT; // Render define a porta automaticamente
 
-// isso aqui é necessário porque __dirname não existe com ESModules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-// Serve os arquivos da build do React
-app.use(express.static(path.join(__dirname, "build")));
-
-// Qualquer rota que não for API, redireciona para o React
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
-
 async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
   const app = express(); // <-- precisa estar AQUI antes de usar `app`
+
+  // isso aqui é necessário porque __dirname não existe com ESModules
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  // Serve os arquivos da build do React
+  app.use(express.static(path.join(__dirname, "build")));
+
+  // Qualquer rota que não for API, redireciona para o React
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+  });
 
   const allowedOrigins = [
     "http://localhost:3000", // para desenvolvimento local
