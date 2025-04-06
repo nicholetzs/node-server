@@ -2,6 +2,13 @@
 
 Este projeto é um **dashboard meteorológico** que consome dados reais de uma API construída com **Node.js + Express** e um banco de dados **MongoDB**. A interface é feita em **React + Tailwind CSS (via CDN)**.
 
+O frontend (React) e o backend (Node.js + Express) estão hospedados separadamente:
+
+- O **frontend** está hospedado no **Netlify**
+- O **backend** está hospedado no **Render**
+
+Eles se comunicam por meio de **requisições HTTP (`fetch`)**, configurando o `proxy` para aceitar chamadas da URL do backend hospedado.
+
 ---
 
 ## 🚀 Como começar
@@ -12,14 +19,15 @@ Este projeto foi criado com [Create React App](https://github.com/facebook/creat
 
 - Node.js (v16+ recomendado)
 - MongoDB Atlas ou local
-- Uma conta no [Render](https://render.com/) (opcional, para deploy)
+- Conta no [Render](https://render.com/) (para o backend)
+- Conta no [Netlify](https://www.netlify.com/) (para o frontend)
 
 ---
 
 ## 🧭 Estrutura do projeto
 
 - **Backend**: API REST em Node.js que lê e salva previsões no MongoDB
-- **Frontend**: Interface React com Tailwind (CDN), consumindo os dados da API
+- **Frontend**: Interface React com Tailwind (CDN), consumindo os dados da API hospedada no Render
 
 ---
 
@@ -174,7 +182,7 @@ export async function saveWeatherData() {
     const collection = db.collection("collection-weather");
 
     const weatherData = data.list.map((forecast) => ({
-      timestamp: new Date(forecast.dt * 1000).toLocaleDateString("pt-BR"),
+      timestamp: new Date(forecast.dt * 1000),
       timestamp_hour: new Date(forecast.dt * 1000).toLocaleTimeString("pt-BR"),
       temperature: forecast.main.temp,
       humidity: forecast.main.humidity,
@@ -244,6 +252,8 @@ useEffect(() => {
 
 A função `buscarPrevisoes` também pode ser chamada ao clicar no botão `AtualizarPrevisoes`.
 
+O frontend utiliza o **proxy** do `package.json` e configurações CORS no backend para permitir essa comunicação com domínios diferentes entre Netlify e Render.
+
 ---
 
 ## 🧩 Componentes
@@ -262,7 +272,11 @@ A API está hospedada em:
 https://whitenights.onrender.com/weatherSave
 ```
 
-Você pode usar Render, Railway ou outra plataforma de backend para publicar sua API.
+O frontend está hospedado em:
+
+```
+https://[seu-app].netlify.app
+```
 
 ---
 
@@ -273,6 +287,7 @@ Você pode usar Render, Railway ou outra plataforma de backend para publicar sua
 - [Tailwind CSS](https://tailwindcss.com/docs/installation/play-cdn)
 - [MongoDB Atlas](https://www.mongodb.com/atlas/database)
 - [Render Deploy](https://render.com/docs/deploy-node-express-app)
+- [Netlify Deploy](https://docs.netlify.com/)
 
 ---
 
