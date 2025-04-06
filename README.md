@@ -6,6 +6,9 @@ O frontend (React) e o backend (Node.js + Express) estão hospedados separadamen
 
 - O **frontend** está hospedado no **Netlify**
 - Repositório: https://github.com/nicholetzs/node-server-client
+- Site: https://forecasttemperatur.netlify.app/
+
+Clique em atualizar previsões para buscar os dados do MongoDb! ☄️
 
 - O **backend** está hospedado no **Render**
 
