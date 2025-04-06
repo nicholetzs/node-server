@@ -51,13 +51,8 @@ async function startServer() {
     const token = req.headers["authorization"]; // Obtém o token do cabeçalho da requisição
     const secretToken = process.env.SECRET_TOKEN;
 
-    console.error("Token inválido:", token);
-    console.error("Token esperado:", `Bearer ${secretToken}`);
-
     if (token !== `Bearer ${secretToken}`) {
-      console.error("Token inválido:", token);
-      console.error("Token esperado:", `Bearer ${secretToken}`);
-
+      console.error("Token inválido, não autorizado.");
       return res.status(403).json({ error: "Acesso não autorizado." });
     }
     try {
