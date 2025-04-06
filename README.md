@@ -5,6 +5,8 @@ Este projeto é um **dashboard meteorológico** que consome dados reais de uma A
 O frontend (React) e o backend (Node.js + Express) estão hospedados separadamente:
 
 - O **frontend** está hospedado no **Netlify**
+- Repositório: https://github.com/nicholetzs/node-server-client
+
 - O **backend** está hospedado no **Render**
 
 Eles se comunicam por meio de **requisições HTTP (`fetch`)**, configurando o `proxy` para aceitar chamadas da URL do backend hospedado.
@@ -275,7 +277,7 @@ https://whitenights.onrender.com/weatherSave
 O frontend está hospedado em:
 
 ```
-https://forecasttemperatur.netlify.app/ Repositório: https://github.com/nicholetzs/node-server-client
+https://forecasttemperatur.netlify.app/
 ```
 
 ---
