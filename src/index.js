@@ -25,7 +25,7 @@ async function startServer() {
 
   // Rota para servir o React
   app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/src/App.tsx"));
+    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
   });
 
   const allowedOrigins = [
