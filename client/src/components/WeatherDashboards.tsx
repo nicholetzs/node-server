@@ -48,47 +48,57 @@ export default function WeatherDashboard() {
     }
   };
 
-  const previsoesAgrupadas: { [key: string]: Previsao[] } = previsoes.reduce(
-    (acc: any, curr: Previsao) => {
+  // Agrupa as previsões por data e formata os dados
+  // Exemplo de agrupamento:
+  /* "04/04/2025": [ previsao1, previsao2, ..., previsao7 ],
+   "05/04/2025": [ previsao1, ..., previsao8 ]
+}*/
+
+  const previsoesAgrupadas = previsoes.reduce(
+    (acc: Record<string, Previsao[]>, curr) => {
       const data = new Date(curr.timestamp).toLocaleDateString("pt-BR", {
         timeZone: "America/Sao_Paulo",
       });
 
-      if (!acc[data]) {
-        acc[data] = [];
-      }
+      if (!acc[data]) acc[data] = [];
       acc[data].push(curr);
+
       return acc;
     },
     {}
   );
 
-  const x = Object.entries(previsoesAgrupadas)
-    .map(([data, previsoesDoDia]) => {
-      const [day, month, year] = data.split("/");
-      const isoDate = new Date(`${year}-${month}-${day}`);
+  const previsoesAgrupadasPorDia = Object.entries(previsoesAgrupadas)
+    .map(([dataPtBr, previsoesDoDia]) => {
+      const primeira = previsoesDoDia[0];
 
       const temperaturas = previsoesDoDia.map((p) => Number(p.temperature));
       const tempMin = Math.min(...temperaturas);
       const tempMax = Math.max(...temperaturas);
 
-      const primeira = previsoesDoDia[0];
+      const umidades = previsoesDoDia.map((p) => Number(p.humidity));
+      const mediaUmidade =
+        umidades.reduce((a, b) => a + b, 0) / umidades.length;
+
+      const ventos = previsoesDoDia.map((p) => Number(p.wind_speed));
+      const mediaVento = ventos.reduce((a, b) => a + b, 0) / ventos.length;
+
+      // Usando o timestamp da primeira previsão para criar a data ordenável
+      const dateObj = new Date(primeira.timestamp);
 
       return {
-        date: isoDate, // ainda útil para ordenação
-        day: isoDate.toLocaleDateString("pt-BR", { weekday: "short" }),
-        tempMin: primeira.temperature_min,
-        tempMax: primeira.temperature_max,
+        date: dateObj,
+        weekday: dateObj.toLocaleDateString("pt-BR", {
+          weekday: "short",
+          timeZone: "America/Sao_Paulo",
+        }),
+        temperature_min: tempMin,
+        temperature_max: tempMax,
+        average_humidity: Number(mediaUmidade.toFixed(1)),
+        average_wind_speed: Number(mediaVento.toFixed(1)),
         condition: primeira.weather,
         icon: primeira.weather_icon,
         location: primeira.location,
-        Timestamp: primeira.timestamp,
-        temperature: primeira.temperature,
-        humidity: primeira.humidity,
-        wind_speed: primeira.wind_speed,
-        rain: primeira.rain,
-        weather: primeira.weather,
-        weather_icon: primeira.weather_icon,
       };
     })
     .sort((a, b) => a.date.getTime() - b.date.getTime());
@@ -298,7 +308,36 @@ export default function WeatherDashboard() {
 
           {/* Daily Weather Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 relative z-10">
-            {previsoes.map((dia, index) => (
+            {previsoesAgrupadasPorDia.map((dia, index) => (
+              <WeatherCard
+                key={index}
+                date={dia.date.toLocaleDateString("pt-BR")}
+                tempMin={dia.temperature_min}
+                tempMax={dia.temperature_max}
+                condition={dia.condition}
+                location={dia.location}
+                icon={getIconFromCondition(dia.condition)}
+                humidity={dia.average_humidity}
+                wind_speed={dia.average_wind_speed}
+                day={dia.weekday}
+              />
+            ))}
+            {/**    {previsoesAgrupadasPorDia.map((dia, index) => (
+              <WeatherCard
+                key={index}
+                date={dia.date.toLocaleDateString("pt-BR")}
+                tempMin={dia.temperature_min}
+                tempMax={dia.temperature_max}
+                condition={dia.condition}
+                location={dia.location}
+                icon={getIconFromCondition(dia.condition)}
+                humidity={dia.average_humidity}
+                wind_speed={dia.average_wind_speed}
+                //rain={"0"} // pode ajustar se quiser a média de chuva também
+                day={dia.weekday}
+              />
+            ))} */}
+            {/* {previsoes.map((dia, index) => (
               <WeatherCard
                 key={index}
                 date={dia.timestamp}
@@ -312,7 +351,7 @@ export default function WeatherDashboard() {
                 rain={dia.rain}
                 day={""}
               />
-            ))}
+            ))}*/}
           </div>
           {/* Hourly Section */}
           <h3 className="text-xl font-medium text-gray-800 mb-4">Hourly</h3>
