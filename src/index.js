@@ -17,15 +17,15 @@ async function startServer() {
   const db = await connectDB(); // Conecta ao MongoDB antes de iniciar o servidor
   const app = express(); // <-- precisa estar AQUI antes de usar `app`
 
-  // isso aqui é necessário porque __dirname não existe com ESModules
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  // Serve os arquivos da build do React
-  app.use(express.static(path.join(__dirname, "/src/build")));
+  // Configuração corrigida para arquivos estáticos
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-  // Qualquer rota que não for API, redireciona para o React
-  app.get("/react", (req, res) => {
-    res.sendFile(path.join(__dirname, "/src/build", "/src/index.js"));
+  // Serve os arquivos estáticos do React (caminho relativo correto)
+  app.use(express.static(path.join(__dirname, "../client/build")));
+
+  // Rota para servir o React
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/src/App.tsx"));
   });
 
   const allowedOrigins = [
@@ -101,7 +101,7 @@ async function startServer() {
     }
   });
 
-  app.get("/", async (req, res) => {
+  app.get("/servidor", async (req, res) => {
     res.status(200).send("Servidor está rodando e conectado ao MongoDB!");
   });
 
