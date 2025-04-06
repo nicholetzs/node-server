@@ -2,7 +2,7 @@ import { connectDB } from "./db.js";
 import express from "express";
 import { getWeatherData } from "./weather.js";
 import dotenv from "dotenv";
-import { saveWeatherData } from "./weatherService.js";
+import { saveWeatherData } from "./weatherSave.js";
 import cors from "cors";
 import { weatherLimiter } from "./weatherLimit.js"; // Importa o limitador de requisições
 
