@@ -48,13 +48,13 @@ async function startServer() {
 
   // Rota para salvar os dados no MongoDB pegando da API
   app.post("/weatherSave", async (req, res) => {
-    const token = req.headers["authorization"]; // Obtém o token do cabeçalho da requisição
+    // const token = req.headers["authorization"]; // Obtém o token do cabeçalho da requisição
     const secretToken = process.env.SECRET_TOKEN;
 
-    if (token !== `Bearer ${secretToken}`) {
+    /* if (token !== `Bearer ${secretToken}`) {
       console.error("Token inválido, não autorizado.");
       return res.status(403).json({ error: "Acesso não autorizado." });
-    }
+    }*/
     try {
       const insertedResult = await saveWeatherData(); // Salva os dados no MongoDB
 
